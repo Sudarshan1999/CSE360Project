@@ -6,6 +6,7 @@ public class AddToPath {
 		
 	}
 	
+	//doesn't check for cycle
 	public void AddToPath(Activity newNode)
 	{
 		for(int i = 0; i < newNode.dependencies.size(); i++)
