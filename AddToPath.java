@@ -4,14 +4,19 @@ public class AddToPath {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-	}
+		AddToPath();
+		
+	
 	
 	//doesn't check for cycle
 	public void AddToPath(Activity newNode)
 	{
+		// read all dependencies of given node
 		for(int i = 0; i < newNode.dependencies.size(); i++)
 		{
+			// reserved for all predecessors on the path
 			string[] traversed;
+			
 			string dependency = newNode.dependencies[i];
 			// loop through entire existing path
 			for(int j = 0; j < pathList.size(); j++)
@@ -22,8 +27,11 @@ public class AddToPath {
 				{
 					start.next = newNode;
 				}
+				
+							
 				else
 				{
+					// traverse down the path to find target node
 					while(start.next != null)
 					{
 						traversed.add(start);
@@ -39,17 +47,21 @@ public class AddToPath {
 								pathList.add(traversed[0]);
 								int newIndex = pathList.size()-1;
 								Activity newStart = pathList[newIndex];
+								
+								// linking new path start with the rest
 								for(k = 1; k < traversed.size(); k++)
 								{
-									// linking new path start with the rest
+									
 									newStart.next = traversed[k];
 									newStart = newStart.next;
 								}
 							}
+							//
 							else
 							{
-								start.next = dependency;
+								start.next = newNode;
 							}
+							
 						}
 					}
 				}
@@ -57,5 +69,5 @@ public class AddToPath {
 		}
 	}
 
-
+	
 }
