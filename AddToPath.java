@@ -5,6 +5,7 @@ public class AddToPath {
 		// TODO Auto-generated method stub
 		
 		AddToPath();
+	}
 		
 	
 	
@@ -23,7 +24,7 @@ public class AddToPath {
 			{
 				Activity start = pathList[j];
 				// newNode is the 2nd in the path
-				if(start.name == dependency)
+				if(start.name.equals(dependency))
 				{
 					start.next = newNode;
 				}
@@ -37,7 +38,7 @@ public class AddToPath {
 						traversed.add(start);
 						start = start.next;
 						
-						if(start.name == dependency)
+						if(start.name.equals(dependency))
 						{
 							// dependency already has a next, copy all previous traversed nodes
 							// and create a new path
@@ -66,6 +67,31 @@ public class AddToPath {
 					}
 				}
 			}
+		}
+	}
+	
+	public void DetectCycle(Activity[] pathList)
+	{
+		for(int i =0 ; i <pathList.size(); i ++)
+		{
+			int dupCount = 0;
+			Activity current = pathList[i];
+			for(int j = 0; j< pathList.size(); j++)
+			{
+				// check for duplicates, default to 1
+				if(pathList[j]== current)
+				{
+					dupCount = dupCount + 1;
+				}
+			}
+			
+			if(dupCount > 1)
+			{
+				System.out.print("Cycle Detected");
+				break;
+				// some action
+			}
+			
 		}
 	}
 
