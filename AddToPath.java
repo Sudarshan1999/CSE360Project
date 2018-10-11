@@ -9,9 +9,16 @@ public class AddToPath {
 		
 	
 	
-	//doesn't check for cycle
+	// double linked list, .next used to handle right insertion
+	// .prev handle left insertion
 	public void AddToPath(Activity newNode)
 	{
+		// start
+		if(newNode.dependencies.size() == 0)
+		{
+			pathList.add(newNode);
+		}
+		
 		// read all dependencies of given node
 		for(int i = 0; i < newNode.dependencies.size(); i++)
 		{
@@ -26,6 +33,8 @@ public class AddToPath {
 				// newNode is the 2nd in the path
 				if(start.name.equals(dependency))
 				{
+					//
+					newNode.prev = start;
 					start.next = newNode;
 				}
 				
@@ -36,7 +45,7 @@ public class AddToPath {
 					while(start.next != null)
 					{
 						traversed.add(start);
-						start = start.next;
+						
 						
 						if(start.name.equals(dependency))
 						{
@@ -56,20 +65,25 @@ public class AddToPath {
 									newStart.next = traversed[k];
 									newStart = newStart.next;
 								}
+								newNode.prev = newStart;
+								newStart.next = newNode;
+								
 							}
 							//
 							else
 							{
+								newNode.prev = start;
 								start.next = newNode;
 							}
 							
 						}
+						start = start.next;						
 					}
 				}
 			}
 		}
 	}
-	
+			
 	public void DetectCycle(Activity[] pathList)
 	{
 		for(int i =0 ; i <pathList.size(); i ++)
