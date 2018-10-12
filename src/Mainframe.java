@@ -123,7 +123,7 @@ public class Mainframe extends JPanel implements ActionListener {
 			public void run() {
 				createAndShowGUI();
 				String[] dependencyNameArray = dependencyNames.split("");
-				Activity myActivity = new Activity(activityName, duration, dependencyNames);
+				Activity myActivity = new Activity(activityName, activityDuration, dependencyNames);
 				AddToPath(myActivity);
 			}
 		});
