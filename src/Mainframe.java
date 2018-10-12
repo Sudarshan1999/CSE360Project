@@ -122,6 +122,9 @@ public class Mainframe extends JPanel implements ActionListener {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				createAndShowGUI();
+				String[] dependencyNameArray = dependencyNames.split("");
+				Activity myActivity = new Activity(activityName, duration, dependencyNames);
+				AddToPath(myActivity);
 			}
 		});
 	}
