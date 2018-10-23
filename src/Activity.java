@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Activity {
 	String activityName;
@@ -10,6 +11,13 @@ public class Activity {
 		this.activityName = activityName;
 		this.duration = duration;
 		this.dependencies = dependencies;
+	}
+
+	public Activity()
+	{
+		activityName = "";
+		duration = 0;
+		dependencies = new ArrayList<String>();
 	}
 
 	public String getActivityName() {
@@ -23,5 +31,4 @@ public class Activity {
 	public ArrayList<String> getDependencies() {
 		return this.dependencies;
 	}
-
 }
