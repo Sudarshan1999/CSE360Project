@@ -7,7 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
-
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 
 public class Mainframe extends JPanel implements ActionListener
@@ -455,4 +459,33 @@ public class Mainframe extends JPanel implements ActionListener
 		System.out.println();
 		System.out.println();
 	}
+	public void createFile(String FileName) throws FileNotFoundException {
+		String myFileName = FileName + ".txt";
+		try {
+			PrintWriter writer = new PrintWriter(myFileName, "UTF-8");
+			writer.println(FileName);
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+			LocalDateTime now = LocalDateTime.now();
+			writer.println(dtf.format(now));
+			for (int i = 0; i < paths.size(); i++) {
+				for (int j = 0; j < paths.get(i).size(); j++) {
+					writer.print(paths.get(i).get(j).activityName + " ");
+					;
+				}
+				writer.println();
+			}
+			writer.print("Activity List");
+			for (int i = 0; i < activityList.size(); i++) {
+				writer.print(activityList.get(i).activityName + " ");
+				;
+			}
+			writer.println();
+			writer.println();
+
+		} catch (UnsupportedEncodingException e) {
+
+		}
+
+	}
+
 }
