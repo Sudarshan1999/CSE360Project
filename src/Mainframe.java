@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 
-public class Mainframe extends JPanel implements ActionListener
-{
+public class Mainframe extends JPanel implements ActionListener {
 	protected JTextField ActivityField;
 	protected JTextField ActivityDuration;
 	protected JTextField dependencyField;
@@ -26,8 +25,7 @@ public class Mainframe extends JPanel implements ActionListener
 	String activityDuration;
 	String dependencyNames;
 
-	public Mainframe()
-	{
+	public Mainframe() {
 		// set layout to gridbag
 		super(new GridBagLayout());
 
@@ -47,50 +45,46 @@ public class Mainframe extends JPanel implements ActionListener
 		JButton Finish = new JButton("Finish");
 		JButton About = new JButton("About");
 		JButton Reset = new JButton("Reset");
+		JButton DurationChanger = new JButton("Change Activity Duration");
+		JButton FileMaker = new JButton("Make a new file");
 
 		JButton AddActivity = new JButton("Add Activity");
 
-		Reset.addActionListener(new ActionListener()
-		{
+		Reset.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
+			public void actionPerformed(ActionEvent arg0) {
 				paths.clear();
 				activityList.clear();
 				JOptionPane.showMessageDialog(null, " All Data has been Reset. Program is ready to be used again");
 			}
 		});
 
-		About.addActionListener(new ActionListener()
-		{
+		About.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				JOptionPane.showMessageDialog(null, " \t\tFriday 3:05 pm Team 4. \nTeam Members: Sudarshan Kadalazhi,Jonah Anderson, Pawel Leszcyzynski, Hao Yang");
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(null,
+						" \t\tFriday 3:05 pm Team 4. \nTeam Members: Sudarshan Kadalazhi,Jonah Anderson, Pawel Leszcyzynski, Hao Yang");
 			}
 		});
 
-		Help.addActionListener(new ActionListener()
-		{
+		Help.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				JOptionPane.showMessageDialog(null, " In order to get started, enter an activity name, duration, and dependency list \n"
-						+ "When you decide that you've entered in enough inputs, click on the finish option to process the information. \n"
-						+ "The output will display a list of paths from start to finish listed in descending order by durations.");
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(null,
+						" In order to get started, enter an activity name, duration, and dependency list \n"
+								+ "When you decide that you've entered in enough inputs, click on the finish option to process the information. \n"
+								+ "The output will display a list of paths from start to finish listed in descending order by durations.");
 			}
 
 		});
-		
-		Finish.addActionListener(new ActionListener()
-		{
+
+		Finish.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e)
-			{
+			public void actionPerformed(ActionEvent e) {
 
 				int n = addActivityListToPath();
 				if (n == 1)
@@ -106,20 +100,16 @@ public class Mainframe extends JPanel implements ActionListener
 		});
 
 		// add activity action implementation
-		AddActivity.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
+		AddActivity.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				activityName = ActivityField.getText();
 				activityDuration = ActivityDuration.getText();
 				dependencyNames = dependencyField.getText();
 
 				Activity current = new Activity();
-				try
-				{
+				try {
 					current.duration = Integer.parseInt(activityDuration);
-				} catch (NumberFormatException e1)
-				{
+				} catch (NumberFormatException e1) {
 					JOptionPane.showMessageDialog(null, "Duration must be an integer");
 					return;
 				}
@@ -127,19 +117,61 @@ public class Mainframe extends JPanel implements ActionListener
 				StringTokenizer str = new StringTokenizer(dependencyNames, ",");
 				while (str.hasMoreTokens())
 					current.dependencies.add(str.nextToken());
-				if (current.dependencies.size() == 0)
-				{
+				if (current.dependencies.size() == 0) {
 					LinkedList<Activity> action = new LinkedList<Activity>();
 					action.add(current);
 					paths.add(action);
-				} else
-				{
+				} else {
 					activityList.add(current);
 				}
 				ActivityField.setText("");
 				ActivityDuration.setText("");
 				dependencyField.setText("");
 				printActivities();
+			}
+		});
+
+		DurationChanger.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JTextField actField = new JTextField(5);
+				JTextField durField = new JTextField(5);
+
+				JPanel myPanel = new JPanel();
+				myPanel.add(new JLabel("Please enter an activity name:"));
+				myPanel.add(actField);
+				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+				myPanel.add(new JLabel("Please enter the new duration:"));
+				myPanel.add(durField);
+
+				int result = JOptionPane.showConfirmDialog(null, myPanel, "",
+						JOptionPane.OK_CANCEL_OPTION);
+				if (result == JOptionPane.OK_OPTION) {
+					
+				}
+			}
+
+		});
+		
+		FileMaker.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				JTextField filenameField =  new JTextField(5);
+				
+				JPanel myPanel = new JPanel();
+				myPanel.add(new JLabel("Please enter a name for the file:"));
+				myPanel.add(filenameField);
+				
+				int result = JOptionPane.showConfirmDialog(null, myPanel, "",
+						JOptionPane.OK_CANCEL_OPTION);
+				if (result == JOptionPane.OK_OPTION) {
+					try {
+						createFile(filenameField.getText());
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
 			}
 		});
 
@@ -191,28 +223,34 @@ public class Mainframe extends JPanel implements ActionListener
 		gc.gridx = 0;
 		gc.gridy = 4;
 		add(AddActivity, gc);
-		//Reset button
+		// DurationChanger
 		gc.gridwidth = 2;
 		gc.gridx = 0;
 		gc.gridy = 5;
+		add(DurationChanger, gc);
+		// FileMaker
+		gc.gridwidth = 2;
+		gc.gridx = 0;
+		gc.gridy = 6;
+		add(FileMaker, gc);
+		// Reset button
+		gc.gridwidth = 2;
+		gc.gridx = 0;
+		gc.gridy = 7;
 		add(Reset, gc);
-		//About button
+		// About button
 		gc.gridwidth = 1;
 		gc.gridx = 1;
 		gc.gridy = 4;
 		add(About, gc);
-		
 
 	}
 
-	protected String displayPathOrders()
-	{
+	protected String displayPathOrders() {
 		ArrayList<SortHelper> values = new ArrayList<>();
-		for (int i = 0; i < paths.size(); i++)
-		{
+		for (int i = 0; i < paths.size(); i++) {
 			SortHelper value = new SortHelper(i, 0);
-			for (int j = 0; j < paths.get(i).size(); j++)
-			{
+			for (int j = 0; j < paths.get(i).size(); j++) {
 				value.duration += paths.get(i).get(j).duration;
 			}
 			values.add(value);
@@ -222,12 +260,10 @@ public class Mainframe extends JPanel implements ActionListener
 			System.out.println(values.get(i).duration);
 		// Sort the list
 		int n = values.size();
-		for (int i = 0; i < n - 1; i++)
-		{
+		for (int i = 0; i < n - 1; i++) {
 			// Find the max
 			int max = i;
-			for (int j = i + 1; j < n; j++)
-			{
+			for (int j = i + 1; j < n; j++) {
 				if (values.get(j).duration > values.get(max).duration)
 					max = j;
 			}
@@ -244,11 +280,9 @@ public class Mainframe extends JPanel implements ActionListener
 		// Now the list is sorted in decending order by key and duration.
 		// Just print in order of the keys in values
 		String str = "";
-		for (int i = 0; i < values.size(); i++)
-		{
+		for (int i = 0; i < values.size(); i++) {
 			LinkedList<Activity> list = paths.get(values.get(i).key);
-			for (int j = 0; j < list.size(); j++)
-			{
+			for (int j = 0; j < list.size(); j++) {
 				str += list.get(j).activityName + " ";
 			}
 			str += "\t Duration: " + values.get(i).duration + " ";
@@ -257,16 +291,14 @@ public class Mainframe extends JPanel implements ActionListener
 		return str;
 	}
 
-	protected int addActivityListToPath()
-	{
+	protected int addActivityListToPath() {
 		convertToSingleDependency();
 		int pass = checkCircularReference();
 		if (pass != 0)
 			return pass;
 		int errors = 0;
 		int i = 0;
-		while (activityList.size() > 0)
-		{
+		while (activityList.size() > 0) {
 			int n = addDependencyToList(activityList.get(0).dependencies.get(0), activityList.get(i));
 			if (errors > activityList.size())
 				return 1;
@@ -274,12 +306,10 @@ public class Mainframe extends JPanel implements ActionListener
 			if (activityList.size() == 0)
 				return 0;
 
-			if (n == 0)
-			{
+			if (n == 0) {
 				errors = 0;
 				activityList.remove(0);
-			} else
-			{
+			} else {
 				errors++;
 				activityList.add(activityList.get(0));
 				activityList.remove(0);
@@ -290,12 +320,9 @@ public class Mainframe extends JPanel implements ActionListener
 		return 0;
 	}
 
-	protected int checkCircularReference()
-	{
-		for (int i = 0; i < activityList.size(); i++)
-		{
-			for (int j = 0; j < activityList.size(); j++)
-			{
+	protected int checkCircularReference() {
+		for (int i = 0; i < activityList.size(); i++) {
+			for (int j = 0; j < activityList.size(); j++) {
 				if (activityList.get(i).dependencies.get(0).equals(activityList.get(j).activityName)
 						&& activityList.get(j).dependencies.get(0).equals(activityList.get(i).activityName))
 					return 2;
@@ -304,14 +331,10 @@ public class Mainframe extends JPanel implements ActionListener
 		return 0;
 	}
 
-	protected void convertToSingleDependency()
-	{
-		for (int i = 0; i < activityList.size(); i++)
-		{
-			if (activityList.get(i).dependencies.size() > 1)
-			{
-				for (int j = activityList.get(i).dependencies.size() - 1; j >= 1; j--)
-				{
+	protected void convertToSingleDependency() {
+		for (int i = 0; i < activityList.size(); i++) {
+			if (activityList.get(i).dependencies.size() > 1) {
+				for (int j = activityList.get(i).dependencies.size() - 1; j >= 1; j--) {
 					Activity copy = new Activity();
 					copy.activityName = activityList.get(i).activityName;
 					copy.dependencies.add(activityList.get(i).dependencies.get(j));
@@ -323,31 +346,25 @@ public class Mainframe extends JPanel implements ActionListener
 		}
 	}
 
-	protected int addDependencyToList(String dependency, Activity newNode)
-	{
+	protected int addDependencyToList(String dependency, Activity newNode) {
 		int added = 0;
-		for (int i = 0; i < paths.size(); i++)
-		{
+		for (int i = 0; i < paths.size(); i++) {
 			if (i > paths.size())
 				break;
-			for (int j = 0; j < paths.get(i).size(); j++)
-			{
+			for (int j = 0; j < paths.get(i).size(); j++) {
 				// check if this is where new dependency needs to be put in
-				if (paths.get(i).get(j).activityName.equals(dependency))
-				{
+				if (paths.get(i).get(j).activityName.equals(dependency)) {
 					Activity copy = new Activity();
 					copy.activityName = newNode.activityName;
 					copy.dependencies.add(dependency);
 					copy.duration = newNode.duration;
-					if (j == paths.get(i).size() - 1)
-					{
+					if (j == paths.get(i).size() - 1) {
 						paths.get(i).add(copy);
 						added++;
 					} else // not the last element so duplicate the path up to this point
 					{
 						LinkedList<Activity> newPath = new LinkedList<>();
-						for (int k = 0; k <= j; k++)
-						{
+						for (int k = 0; k <= j; k++) {
 							// copy the activity from original path and add
 							Activity newActivity = new Activity();
 							newActivity.activityName = paths.get(i).get(k).activityName;
@@ -371,8 +388,7 @@ public class Mainframe extends JPanel implements ActionListener
 		return -1;// not found in list, try again later
 	}
 
-	public void actionPerformed(ActionEvent activityEvt)
-	{
+	public void actionPerformed(ActionEvent activityEvt) {
 		String text = ActivityField.getText();
 		// textArea.append(text + newline);
 		// textField.selectAll();
@@ -384,8 +400,7 @@ public class Mainframe extends JPanel implements ActionListener
 
 	}
 
-	private static void createAndShowGUI()
-	{
+	private static void createAndShowGUI() {
 		// Create and set up the window.
 		JFrame frame = new JFrame("TextDemo");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -398,40 +413,30 @@ public class Mainframe extends JPanel implements ActionListener
 		frame.setVisible(true);
 	}
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		paths = new ArrayList<>();
 		activityList = new ArrayList<>();
-		javax.swing.SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
 				createAndShowGUI();
 			}
 		});
 	}
 
-	public void AddToPath(Activity newNode, ArrayList<LinkedList<Activity>> paths)
-	{
+	public void AddToPath(Activity newNode, ArrayList<LinkedList<Activity>> paths) {
 		// start
-		if (newNode.dependencies.size() == 0)
-		{
+		if (newNode.dependencies.size() == 0) {
 			LinkedList<Activity> newPath = new LinkedList<>();
 			newPath.add(newNode);
 			paths.add(newPath);
-		} else
-		{
+		} else {
 			// check if this path
-			for (int k = 0; k < newNode.dependencies.size(); k++)
-			{
+			for (int k = 0; k < newNode.dependencies.size(); k++) {
 
-				for (int i = 0; i < paths.size(); i++)
-				{
-					for (int j = 0; j < paths.get(i).size(); j++)
-					{
+				for (int i = 0; i < paths.size(); i++) {
+					for (int j = 0; j < paths.get(i).size(); j++) {
 						// last element in linked list is the dependency
-						if (paths.get(i).getLast().activityName.equalsIgnoreCase(newNode.dependencies.get(k)))
-						{
+						if (paths.get(i).getLast().activityName.equalsIgnoreCase(newNode.dependencies.get(k))) {
 							paths.get(i).add(newNode);
 						}
 					}
@@ -441,24 +446,21 @@ public class Mainframe extends JPanel implements ActionListener
 
 	}
 
-	public void printActivities()
-	{
-		for (int i = 0; i < paths.size(); i++)
-		{
-			for (int j = 0; j < paths.get(i).size(); j++)
-			{
+	public void printActivities() {
+		for (int i = 0; i < paths.size(); i++) {
+			for (int j = 0; j < paths.get(i).size(); j++) {
 				System.out.print(paths.get(i).get(j).activityName + " ");
 			}
 			System.out.println();
 		}
 		System.out.println("Activity List");
-		for (int i = 0; i < activityList.size(); i++)
-		{
+		for (int i = 0; i < activityList.size(); i++) {
 			System.out.print(activityList.get(i).activityName + " ");
 		}
 		System.out.println();
 		System.out.println();
 	}
+
 	public void createFile(String FileName) throws FileNotFoundException {
 		String myFileName = FileName + ".txt";
 		try {
@@ -467,20 +469,29 @@ public class Mainframe extends JPanel implements ActionListener
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 			LocalDateTime now = LocalDateTime.now();
 			writer.println(dtf.format(now));
+			writer.print("Activity List: ");
 			for (int i = 0; i < paths.size(); i++) {
 				for (int j = 0; j < paths.get(i).size(); j++) {
 					writer.print(paths.get(i).get(j).activityName + " ");
-					;
+					writer.print(paths.get(i).get(j).duration + " ");
 				}
 				writer.println();
 			}
-			writer.print("Activity List");
-			for (int i = 0; i < activityList.size(); i++) {
-				writer.print(activityList.get(i).activityName + " ");
-				;
+			writer.println();
+			writer.print("Paths: ");
+			int duration;
+			for (int i = 0; i < paths.size(); i++) {
+				duration = 0;
+				for (int j = 0; j < paths.get(i).size(); j++) {
+					writer.print(paths.get(i).get(j).activityName + " ");
+					duration += paths.get(i).get(j).duration;
+				}
+				writer.print(duration);
+				writer.println();
 			}
 			writer.println();
-			writer.println();
+			writer.flush();
+			writer.close();
 
 		} catch (UnsupportedEncodingException e) {
 
