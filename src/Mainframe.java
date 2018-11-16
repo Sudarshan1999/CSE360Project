@@ -469,20 +469,29 @@ public class Mainframe extends JPanel implements ActionListener {
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 			LocalDateTime now = LocalDateTime.now();
 			writer.println(dtf.format(now));
+			writer.print("Activity List: ");
 			for (int i = 0; i < paths.size(); i++) {
 				for (int j = 0; j < paths.get(i).size(); j++) {
 					writer.print(paths.get(i).get(j).activityName + " ");
-					;
+					writer.print(paths.get(i).get(j).duration + " ");
 				}
 				writer.println();
 			}
-			writer.print("Activity List");
-			for (int i = 0; i < activityList.size(); i++) {
-				writer.print(activityList.get(i).activityName + " ");
-				;
+			writer.println();
+			writer.print("Paths: ");
+			int duration;
+			for (int i = 0; i < paths.size(); i++) {
+				duration = 0;
+				for (int j = 0; j < paths.get(i).size(); j++) {
+					writer.print(paths.get(i).get(j).activityName + " ");
+					duration += paths.get(i).get(j).duration;
+				}
+				writer.print(duration);
+				writer.println();
 			}
 			writer.println();
-			writer.println();
+			writer.flush();
+			writer.close();
 
 		} catch (UnsupportedEncodingException e) {
 
